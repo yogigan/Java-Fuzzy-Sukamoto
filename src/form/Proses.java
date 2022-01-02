@@ -5,6 +5,7 @@
  */
 package form;
 
+import variabel.VKeterangan;
 import variabel.VNilaiRataRata;
 import variabel.VPenghasilan;
 import variabel.VTanggungan;
@@ -14,13 +15,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.util.logging.Level;
 
 /**
- *
  * @author acer
  */
 public class Proses extends javax.swing.JFrame {
@@ -35,10 +34,10 @@ public class Proses extends javax.swing.JFrame {
         String[] judul = {"NIS", "Nama", "Kelas", "Nilai Rata-rata", "Tanggungan Orang Tua", "Penghasilan Orang Tua", "Keterangan"};
         tblProses = new DefaultTableModel(judul, 0);
         tblHasil.setModel(tblProses);
-        tampilkanTabel();
+        tampilkanTabel(" ");
     }
 
-    private void tampilkanTabel() {
+    private void tampilkanTabel(String kelas) {
         int row = tblProses.getRowCount();
         for (int a = 0; a < row; a++) {
             tblProses.removeRow(0);
@@ -46,9 +45,17 @@ public class Proses extends javax.swing.JFrame {
         try {
             Connection cn = DriverManager.getConnection("jdbc:mysql://localhost/db_siswa", "root", "");
             //ResultSet rs = cn.createStatement().executeQuery("SELECT * FROM datasiswa");
-            ResultSet rs = cn.createStatement().executeQuery("SELECT datasiswa.nis, datasiswa.nama, datasiswa.kelas, nilaisiswa.nilai_ratarata,"
-                    + "datasiswa.tanggungan, datasiswa.penghasilan_ortu, nilaisiswa.hasil "
-                    + "FROM datasiswa JOIN nilaisiswa ON datasiswa.nis = nilaisiswa.nis");
+            String query;
+            if (kelas == " ") {
+                query = "SELECT datasiswa.nis, datasiswa.nama, datasiswa.kelas, nilaisiswa.nilai_ratarata,"
+                        + "datasiswa.tanggungan, datasiswa.penghasilan_ortu, nilaisiswa.hasil "
+                        + "FROM datasiswa JOIN nilaisiswa ON datasiswa.nis = nilaisiswa.nis";
+            } else {
+                query = "SELECT datasiswa.nis, datasiswa.nama, datasiswa.kelas, nilaisiswa.nilai_ratarata,"
+                        + "datasiswa.tanggungan, datasiswa.penghasilan_ortu, nilaisiswa.hasil "
+                        + "FROM datasiswa JOIN nilaisiswa ON datasiswa.nis = nilaisiswa.nis WHERE datasiswa.kelas = '" + kelas + "'";
+            }
+            ResultSet rs = cn.createStatement().executeQuery(query);
             while (rs.next()) {
                 String data[] = {rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)};
                 tblProses.addRow(data);
@@ -104,22 +111,22 @@ public class Proses extends javax.swing.JFrame {
         });
 
         tblHasil.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {},
-                {},
-                {},
-                {}
-            },
-            new String [] {
+                new Object[][]{
+                        {},
+                        {},
+                        {},
+                        {}
+                },
+                new String[]{
 
-            }
+                }
         ));
         jScrollPane1.setViewportView(tblHasil);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("Kelas   :");
 
-        cbKelas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "IPA", "IPS", "BAHASA" }));
+        cbKelas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{" ", "IPA", "IPS", "BAHASA"}));
         cbKelas.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbKelasItemStateChanged(evt);
@@ -141,39 +148,39 @@ public class Proses extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(101, 101, 101))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(50, 50, 50)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnKeluar)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cbKelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnProses))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 684, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(49, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel1)
+                                .addGap(101, 101, 101))
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(50, 50, 50)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(btnKeluar)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(cbKelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(btnProses))
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 684, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(49, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addComponent(jLabel1)
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnProses)
-                    .addComponent(jLabel2)
-                    .addComponent(cbKelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnKeluar)
-                .addContainerGap(19, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(40, 40, 40)
+                                .addComponent(jLabel1)
+                                .addGap(28, 28, 28)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(btnProses)
+                                        .addComponent(jLabel2)
+                                        .addComponent(cbKelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnKeluar)
+                                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
@@ -198,30 +205,43 @@ public class Proses extends javax.swing.JFrame {
 
                 Rules.hitung_u();
                 Rules.hitung_z();
+
                 DecimalFormat df = new DecimalFormat("#########.###");
                 double hasildef = Double.parseDouble(df.format(Rules.defuzzifikasi()));
-                System.out.println("Nilai Rata2 : "+ VNilaiRataRata.getNilaiRataRata());
-                System.out.println("Tangungan : "+ VTanggungan.getTanggungan());
-                System.out.println("Penghasilan : "+ VPenghasilan.getPenghasilan());
-                System.out.println("Hasil : "+ hasildef);
-
-                Connection cn = DriverManager.getConnection("jdbc:mysql://localhost/db_siswa", "root", "");
-//                String sql = "INSERT INTO nilaisiswa (hasil) values (?)";
-//                PreparedStatement pst = cn.prepareStatement(sql);
+                VKeterangan.setKeterangan(hasildef);
+                double keterangan = VKeterangan.getKeterangan();
+                double tidakLolos = VKeterangan.tidaklolos();
+                double cadangan = VKeterangan.cadangan();
+                double lolos = VKeterangan.lolos();
                 String desc;
-                if (hasildef == 1.0) {
-                    desc = "Tidak Lolos";
+
+                if (lolos > cadangan && lolos > tidakLolos) {
+                    desc = "Lolos";
                     tblHasil.setValueAt(desc, i, 6);
-                } else if (hasildef == 2.0) {
+                } else if (cadangan > tidakLolos) {
                     desc = "Cadangan";
                     tblHasil.setValueAt(desc, i, 6);
                 } else {
-                    desc = "Lolos";
+                    desc = "Tidak Lolos";
                     tblHasil.setValueAt(desc, i, 6);
                 }
 
-                int id = Integer.parseInt(tblHasil.getModel().getValueAt(i, 0).toString());
-                String sql = "UPDATE nilaisiswa SET hasil='" + desc + "' WHERE nis = '" + id + "'";
+                System.out.println("Nama : " + tblHasil.getModel().getValueAt(i, 1));
+                System.out.println("Hasil Fuzzi : " + hasildef);
+                System.out.println("Keterangan Value : " + keterangan);
+                System.out.println("Keterangan Tidak Lolos : " + tidakLolos);
+                System.out.println("Keterangan Cadangan : " + cadangan);
+                System.out.println("Keterangan Lolos : " + lolos);
+                System.out.println("Nilai Rata2 : " + VNilaiRataRata.getNilaiRataRata());
+                System.out.println("Tangungan : " + VTanggungan.getTanggungan());
+                System.out.println("Penghasilan : " + VPenghasilan.getPenghasilan());
+                System.out.println("Keterangan : " + desc);
+                System.out.println("================================");
+                System.out.println();
+
+                Connection cn = DriverManager.getConnection("jdbc:mysql://localhost/db_siswa", "root", "");
+                int nis = Integer.parseInt(tblHasil.getModel().getValueAt(i, 0).toString());
+                String sql = "UPDATE nilaisiswa SET hasil='" + desc + "' WHERE nis = '" + nis + "'";
                 cn.createStatement().executeUpdate(sql);
 
             }
@@ -232,8 +252,16 @@ public class Proses extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Proses.class.getName()).log(Level.SEVERE, null, e);
         }
 
+    }
 
-    }//GEN-LAST:event_btnProsesActionPerformed
+    public void resetValue() {
+        VNilaiRataRata.setNilaiRataRata(0);
+        VTanggungan.setTanggungan(0);
+        VPenghasilan.setPenghasilan(0);
+        VKeterangan.setKeterangan(0);
+    }
+
+//GEN-LAST:event_btnProsesActionPerformed
 
     private void btnProsesFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btnProsesFocusGained
         // TODO add your handling code here:
@@ -247,7 +275,8 @@ public class Proses extends javax.swing.JFrame {
     private void cbKelasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbKelasItemStateChanged
         // TODO add your handling code here:
         String query = cbKelas.getSelectedItem().toString();
-        filter(query);
+//        filter(query);
+        tampilkanTabel(query);
     }//GEN-LAST:event_cbKelasItemStateChanged
 
     private void btnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeluarActionPerformed
@@ -265,7 +294,7 @@ public class Proses extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

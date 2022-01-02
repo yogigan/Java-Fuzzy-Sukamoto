@@ -15,8 +15,8 @@ import variabel.VTanggungan;
  */
 public class Rules {
 
-    private static double[] u_Keterangan = new double[34];
-    private static double[] z_Keterangan = new double[34];
+    private static final double[] u_Keterangan = new double[34];
+    private static final double[] z_Keterangan = new double[34];
     private static double bobot;
 
     //rules
@@ -65,12 +65,12 @@ public class Rules {
     public static double defuzzifikasi() {
         double atas = 0, bawah = 0;
         for (int i = 0; i < 34; i++) {
-            System.out.println("z_ke-" + i + " : " + z_Keterangan[i]);
-            System.out.println("u_ke-" + i + " : " + u_Keterangan[i]);
+//            System.out.println("z_ke-" + i + " : " + z_Keterangan[i]);
+//            System.out.println("u_ke-" + i + " : " + u_Keterangan[i]);
             atas += (u_Keterangan[i] * z_Keterangan[i]);
             bawah += u_Keterangan[i];
         }
-        //System.out.println(atas/bawah);
+//        System.out.println(atas/bawah);
         return (atas / bawah);
 
     }
